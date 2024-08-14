@@ -1,17 +1,30 @@
-import logo from "./logo.svg";
 import "./App.css";
+import initialiseGrid from "./utils/initialiseGrid";
 
-const numberOfRows = 6;
-const numberOfColumns = 7;
-
-const cells = [...Array(42).keys()];
+const cellSize = 60;
 
 function App() {
   return (
-    <div>
-      {cells.map((cellIndex) => (
-        <div key={cellIndex} data-testid="grid-cell"></div>
-      ))}
+    <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
+      <div>
+        {initialiseGrid().map((row, i) => {
+          return (
+            <div style={{ display: "flex" }} key={i}>
+              {row.map((cell) => (
+                <div
+                  key={cell}
+                  style={{
+                    border: "1px solid",
+                    height: cellSize,
+                    width: cellSize,
+                  }}
+                  data-testid="grid-cell"
+                ></div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
