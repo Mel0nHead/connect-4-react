@@ -7,11 +7,15 @@ const cellSize = 60;
 function App() {
   const [isRedNext, setIsRedNext] = useState(true);
 
+  function handleCellClick() {
+    setIsRedNext((isRed) => !isRed);
+  }
+
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
         <p>Current turn: {isRedNext ? "red" : "yellow"}</p>
-        <div>
+        <div data-testid="grid">
           {initialiseGrid().map((row, i) => {
             return (
               <div style={{ display: "flex" }} key={i}>
@@ -19,9 +23,7 @@ function App() {
                   <div
                     key={cell}
                     role="button"
-                    onClick={() => {
-                      setIsRedNext((i) => !i);
-                    }}
+                    onClick={handleCellClick}
                     style={{
                       border: "1px solid",
                       height: cellSize,
