@@ -5,6 +5,7 @@ import initialiseGrid from "./utils/initialiseGrid";
 const cellSize = 60;
 
 const initialGameState = [...Array(6 * 7).fill(null)];
+const grid = initialiseGrid();
 
 function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
@@ -12,11 +13,17 @@ function App() {
 
   function handleCellClick(cellIndex) {
     const cellValue = isRedsTurn ? "red" : "yellow";
-    const slice1 = gameState.slice(0, cellIndex);
-    const slice2 = gameState.slice(cellIndex);
-    console.log(slice1);
-    console.log(slice2);
-    setGameState([...slice1, cellValue, ...slice2]);
+
+    setGameState((currentGameState) => {
+      const slice1 = currentGameState.slice(0, cellIndex);
+      const slice2 = currentGameState.slice(cellIndex + 1);
+      const newState = [...slice1, cellValue, ...slice2];
+
+      console.log(slice1);
+      console.log(slice2);
+
+      return newState;
+    });
     setIsRedsTurn((isRed) => !isRed);
   }
 
@@ -25,9 +32,9 @@ function App() {
       <div>
         <p>Current turn: {isRedsTurn ? "red" : "yellow"}</p>
         <div data-testid="grid">
-          {initialiseGrid().map((row, i) => {
+          {grid.map(([row, id]) => {
             return (
-              <div style={{ display: "flex" }} key={i}>
+              <div style={{ display: "flex" }} key={id}>
                 {row.map((cellIndex) => (
                   <div
                     key={cellIndex}

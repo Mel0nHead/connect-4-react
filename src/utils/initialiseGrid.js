@@ -13,7 +13,7 @@ function initialiseGrid() {
       return value;
     });
 
-    return newRow;
+    return [newRow, String(Math.random())];
   });
 }
 
