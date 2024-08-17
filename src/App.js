@@ -12,16 +12,14 @@ function App() {
   const [gameState, setGameState] = useState(initialGameState);
 
   function handleCellClick(cellIndex) {
+    if (gameState[cellIndex]) return;
+
     const cellValue = isRedsTurn ? "red" : "yellow";
 
     setGameState((currentGameState) => {
       const slice1 = currentGameState.slice(0, cellIndex);
       const slice2 = currentGameState.slice(cellIndex + 1);
       const newState = [...slice1, cellValue, ...slice2];
-
-      console.log(slice1);
-      console.log(slice2);
-
       return newState;
     });
     setIsRedsTurn((isRed) => !isRed);
