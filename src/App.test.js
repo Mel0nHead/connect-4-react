@@ -5,7 +5,7 @@ import App from "./App";
 
 test("should display the correct number of grid cells", async () => {
   render(<App />);
-  const gridCells = await screen.findAllByTestId("grid-cell");
+  const gridCells = await screen.findAllByTestId(/grid-cell-/);
   expect(gridCells).toHaveLength(6 * 7);
 });
 
@@ -19,7 +19,7 @@ test("should change the user's turn when current user make their move", async ()
   const user = userEvent.setup();
   render(<App />);
 
-  const gridCells = await screen.findAllByTestId("grid-cell");
+  const gridCells = await screen.findAllByTestId(/grid-cell-/);
   await user.click(gridCells[0]);
 
   expect(screen.getByText(/Current turn: yellow/)).toBeVisible();
@@ -29,8 +29,8 @@ test("should populate a cell with the player's colour when clicked", async () =>
   const user = userEvent.setup();
   render(<App />);
 
-  const gridCells = await screen.findAllByTestId("grid-cell");
-  await user.click(gridCells[0]);
+  const gridCell = await screen.findByTestId("grid-cell-21");
+  await user.click(gridCell);
 
-  expect(screen.getByTestId("grid")).toHaveTextContent("red");
+  expect(await screen.findByTestId("grid-cell-21")).toHaveTextContent("red");
 });
