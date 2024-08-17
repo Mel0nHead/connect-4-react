@@ -48,3 +48,15 @@ test("should not be able to change the value of a cell that already has a value"
 
   expect(await screen.findByTestId("grid-cell-21")).toHaveTextContent("red");
 });
+
+test("should only be able to populate the first available slot in column (starting from bottom)", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  await user.click(await screen.findByTestId("grid-cell-14"));
+
+  expect(await screen.findByTestId("grid-cell-35")).toHaveTextContent("red");
+  expect(await screen.findByTestId("grid-cell-14")).not.toHaveTextContent(
+    "red"
+  );
+});

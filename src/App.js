@@ -4,6 +4,7 @@ import initialiseGrid from "./utils/initialiseGrid";
 
 const cellSize = 60;
 
+// TODO: reference column and row count variables
 const initialGameState = [...Array(6 * 7).fill(null)];
 const grid = initialiseGrid();
 
@@ -13,6 +14,8 @@ function App() {
 
   function handleCellClick(cellIndex) {
     if (gameState[cellIndex]) return;
+
+    console.log(cellIndex % 7);
 
     const cellValue = isRedsTurn ? "red" : "yellow";
 
