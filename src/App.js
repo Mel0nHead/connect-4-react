@@ -1,12 +1,16 @@
 import { useState } from "react";
 import "./App.css";
 import initialiseGrid from "./utils/initialiseGrid";
+import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 
-const cellSize = 60;
+const CELL_SIZE = 60;
+const NUMBER_OF_ROWS = 6;
+const NUMBER_OF_COLUMNS = 7;
 
-// TODO: reference column and row count variables
-const initialGameState = [...Array(6 * 7).fill(null)];
-const grid = initialiseGrid();
+const initialGameState = [
+  ...Array(NUMBER_OF_ROWS * NUMBER_OF_COLUMNS).fill(null),
+];
+const grid = initialiseGrid(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS);
 
 function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
@@ -14,14 +18,12 @@ function App() {
 
   function handleCellClick(cellIndex) {
     if (gameState[cellIndex]) return;
-
-    console.log(cellIndex % 7);
-
     const cellValue = isRedsTurn ? "red" : "yellow";
+    const targetIndex = findFirstAvailableCellInColumn(gameState, cellIndex);
 
     setGameState((currentGameState) => {
-      const slice1 = currentGameState.slice(0, cellIndex);
-      const slice2 = currentGameState.slice(cellIndex + 1);
+      const slice1 = currentGameState.slice(0, targetIndex);
+      const slice2 = currentGameState.slice(targetIndex + 1);
       const newState = [...slice1, cellValue, ...slice2];
       return newState;
     });
@@ -43,14 +45,17 @@ function App() {
                     onClick={() => handleCellClick(cellIndex)}
                     style={{
                       border: "1px solid",
-                      height: cellSize,
-                      width: cellSize,
+                      height: CELL_SIZE,
+                      width: CELL_SIZE,
+                      background: gameState[cellIndex] || "none",
                     }}
                     data-testid={`grid-cell-${cellIndex}`}
                   >
                     <span>{cellIndex}</span>
                     {gameState[cellIndex] ? (
-                      <span>{gameState[cellIndex]}</span>
+                      <span style={{ display: "none" }}>
+                        {gameState[cellIndex]}
+                      </span>
                     ) : null}
                   </div>
                 ))}

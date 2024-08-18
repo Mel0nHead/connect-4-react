@@ -1,7 +1,4 @@
-const numberOfRows = 6;
-const numberOfColumns = 7;
-
-function initialiseGrid() {
+function initialiseGrid(numberOfRows, numberOfColumns) {
   let count = 0;
 
   return [

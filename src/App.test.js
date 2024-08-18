@@ -25,28 +25,18 @@ test("should change the user's turn when current user make their move", async ()
   expect(screen.getByText(/Current turn: yellow/)).toBeVisible();
 });
 
-test("should populate a cell with the player's colour when clicked", async () => {
-  const user = userEvent.setup();
-  render(<App />);
-
-  const gridCell = await screen.findByTestId("grid-cell-21");
-  await user.click(gridCell);
-
-  expect(await screen.findByTestId("grid-cell-21")).toHaveTextContent("red");
-});
-
 test("should not be able to change the value of a cell that already has a value", async () => {
   const user = userEvent.setup();
   render(<App />);
 
-  const gridCell = await screen.findByTestId("grid-cell-21");
+  const gridCell = await screen.findByTestId("grid-cell-35");
   await user.click(gridCell);
 
-  expect(await screen.findByTestId("grid-cell-21")).toHaveTextContent("red");
+  expect(await screen.findByTestId("grid-cell-35")).toHaveTextContent("red");
 
-  await user.click(await screen.findByTestId("grid-cell-21"));
+  await user.click(await screen.findByTestId("grid-cell-35"));
 
-  expect(await screen.findByTestId("grid-cell-21")).toHaveTextContent("red");
+  expect(await screen.findByTestId("grid-cell-35")).toHaveTextContent("red");
 });
 
 test("should only be able to populate the first available slot in column (starting from bottom)", async () => {
