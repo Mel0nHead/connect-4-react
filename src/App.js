@@ -2,10 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import initialiseGrid from "./utils/initialiseGrid";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
+import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "./constants";
 
 const CELL_SIZE = 60;
-const NUMBER_OF_ROWS = 6;
-const NUMBER_OF_COLUMNS = 7;
 
 const initialGameState = [
   ...Array(NUMBER_OF_ROWS * NUMBER_OF_COLUMNS).fill(null),
@@ -26,6 +25,7 @@ function App() {
       const slice1 = currentGameState.slice(0, targetIndex);
       const slice2 = currentGameState.slice(targetIndex + 1);
       const newState = [...slice1, cellValue, ...slice2];
+
       return newState;
     });
     setIsRedsTurn((isRed) => !isRed);
