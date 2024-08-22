@@ -24,6 +24,10 @@ function App() {
     if (rowIndex === null) return;
 
     setGameState((currentGameState) => {
+      console.log(
+        updateGameState(currentGameState, columnIndex, rowIndex, cellValue)
+      );
+
       return updateGameState(
         currentGameState,
         columnIndex,
