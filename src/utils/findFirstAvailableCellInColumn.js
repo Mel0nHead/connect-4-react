@@ -1,9 +1,6 @@
-import { NUMBER_OF_COLUMNS } from "../constants";
-
-function findFirstAvailableCellInColumn(gameState, targetCellIndex) {
-  const cell = gameState
+function findFirstAvailableCellInColumn(gameState, columnIndex) {
+  const cell = gameState[columnIndex]
     .map((value, i) => [value, i])
-    .filter(([_, i]) => i % 7 === targetCellIndex % NUMBER_OF_COLUMNS)
     .reverse()
     .find(([value, _]) => value === null);
 

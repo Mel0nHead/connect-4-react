@@ -3,30 +3,33 @@ import "./App.css";
 import initialiseGrid from "./utils/initialiseGrid";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "./constants";
+import updateGameState from "./utils/updateGameState";
 
 const CELL_SIZE = 60;
 
 const initialGameState = [
-  ...Array(NUMBER_OF_ROWS * NUMBER_OF_COLUMNS).fill(null),
+  ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
 ];
+
 const grid = initialiseGrid(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS);
 
 function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
   const [gameState, setGameState] = useState(initialGameState);
 
-  function handleCellClick(cellIndex) {
+  function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? "red" : "yellow";
-    const targetIndex = findFirstAvailableCellInColumn(gameState, cellIndex);
+    const rowIndex = findFirstAvailableCellInColumn(gameState, columnIndex);
 
-    if (targetIndex === null) return;
+    if (rowIndex === null) return;
 
     setGameState((currentGameState) => {
-      const slice1 = currentGameState.slice(0, targetIndex);
-      const slice2 = currentGameState.slice(targetIndex + 1);
-      const newState = [...slice1, cellValue, ...slice2];
-
-      return newState;
+      return updateGameState(
+        currentGameState,
+        columnIndex,
+        rowIndex,
+        cellValue
+      );
     });
     setIsRedsTurn((isRed) => !isRed);
   }
@@ -36,30 +39,34 @@ function App() {
       <div>
         <p>Current turn: {isRedsTurn ? "red" : "yellow"}</p>
         <div data-testid="grid">
-          {grid.map(([row, id]) => {
+          {grid.map(([row, id], rowIndex) => {
             return (
               <div style={{ display: "flex" }} key={id}>
-                {row.map((cellIndex) => (
-                  <div
-                    key={cellIndex}
-                    role="button"
-                    onClick={() => handleCellClick(cellIndex)}
-                    style={{
-                      border: "1px solid",
-                      height: CELL_SIZE,
-                      width: CELL_SIZE,
-                      background: gameState[cellIndex] || "none",
-                    }}
-                    data-testid={`grid-cell-${cellIndex}`}
-                  >
-                    <span>{cellIndex}</span>
-                    {gameState[cellIndex] ? (
-                      <span style={{ display: "none" }}>
-                        {gameState[cellIndex]}
+                {row.map((cellIndex, columnIndex) => {
+                  const cellValue = gameState[columnIndex][rowIndex];
+
+                  return (
+                    <div
+                      key={cellIndex}
+                      role="button"
+                      onClick={() => handleCellClick(columnIndex, rowIndex)}
+                      style={{
+                        border: "1px solid",
+                        height: CELL_SIZE,
+                        width: CELL_SIZE,
+                        background: cellValue || "none",
+                      }}
+                      data-testid={`grid-cell-${cellIndex}`}
+                    >
+                      <span>
+                        {columnIndex}, {rowIndex}
                       </span>
-                    ) : null}
-                  </div>
-                ))}
+                      {cellValue ? (
+                        <span style={{ display: "none" }}>{cellValue}</span>
+                      ) : null}
+                    </div>
+                  );
+                })}
               </div>
             );
           })}
