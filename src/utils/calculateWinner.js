@@ -17,29 +17,21 @@ function hasRowBasedWinner(gameState, indexOfLastMove, valueOfLastMove) {
   return consecutiveSquaresInRow === winningNumber;
 }
 
-function hasColumnBasedWinner(gameState, indexOfLastMove, valueOfLastMove) {
-  const consecutiveSquaresInColumn = gameState
-    .filter(([_, i]) => i % 7 === indexOfLastMove % NUMBER_OF_COLUMNS)
-    .reduce((count, [cellValue, _]) => {
+function calculateWinner(gameState, move) {
+  const [columnIndex, rowIndex] = move;
+
+  const valueOfLastMove = gameState[columnIndex][rowIndex];
+
+  const consecutiveSquaresInColumn = gameState[columnIndex].reduce(
+    (count, cellValue) => {
       if (count === winningNumber) return count;
 
       return cellValue === valueOfLastMove ? count + 1 : 0;
-    }, 0);
+    },
+    0
+  );
 
-  return consecutiveSquaresInColumn === winningNumber;
-}
-
-function calculateWinner(gameState, indexOfLastMove) {
-  const valueOfLastMove = gameState[indexOfLastMove];
-  const gameStateWithIndexes = gameState.map((value, i) => [value, i]);
-
-  return hasColumnBasedWinner(
-    gameStateWithIndexes,
-    indexOfLastMove,
-    valueOfLastMove
-  ) || hasRowBasedWinner(gameStateWithIndexes, indexOfLastMove, valueOfLastMove)
-    ? valueOfLastMove
-    : null;
+  return consecutiveSquaresInColumn === winningNumber ? valueOfLastMove : null;
 }
 
 export default calculateWinner;

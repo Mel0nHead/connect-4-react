@@ -14,53 +14,18 @@ test("should return null if there are not 4 consecutive squares (column)", () =>
   expect(calculateWinner(gameState, [3, 1])).toEqual(null);
 });
 
-test.skip("should return winner if there are 4 consecutive cells with same value in a column", () => {
+test("should return winner if there are 4 consecutive cells with same value in a column", () => {
   const gameState = [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    "red",
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    "red",
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    "red",
-    null,
-    null,
-    null,
-    null,
-    "yellow",
-    null,
-    "red",
-    null,
-    null,
-    null,
-    "red",
-    "yellow",
-    null,
-    "yellow",
-    null,
-    null,
-    "yellow",
+    [null, null, null, null, null, null],
+    [null, null, null, null, "red", "red"],
+    [null, null, "yellow", "yellow", "yellow", "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, null],
   ];
 
-  expect(calculateWinner(gameState, 10)).toEqual("red");
+  expect(calculateWinner(gameState, [2, 2])).toEqual("yellow");
 });
 
 test.skip("should not return winner if there are not 4 consecutive squares (row)", () => {
