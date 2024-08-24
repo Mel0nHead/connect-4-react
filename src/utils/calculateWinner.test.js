@@ -56,7 +56,7 @@ test("should return winner if there are 4 consecutive squares (row)", () => {
   expect(calculateWinner(gameState, [4, 5])).toEqual("red");
 });
 
-test("should not return winner if there are not 4 consecutive squares (diagonal)", () => {
+test("should not return winner if there are not 4 consecutive squares (ascending diagonal)", () => {
   const gameState = [
     [null, null, null, null, null, null],
     [null, null, null, null, null, "red"],
@@ -70,7 +70,7 @@ test("should not return winner if there are not 4 consecutive squares (diagonal)
   expect(calculateWinner(gameState, [5, 1])).toEqual(null);
 });
 
-test("should return winner if there are 4 consecutive squares (diagonal)", () => {
+test("should return winner if there are 4 consecutive squares (ascending diagonal)", () => {
   const gameState = [
     [null, null, null, null, null, null],
     [null, null, null, null, null, "red"],
@@ -82,4 +82,32 @@ test("should return winner if there are 4 consecutive squares (diagonal)", () =>
   ];
 
   expect(calculateWinner(gameState, [4, 2])).toEqual("red");
+});
+
+test("should not return winner if there are not 4 consecutive squares (descending diagonal)", () => {
+  const gameState = [
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, "red", "yellow", "red", "yellow", "yellow"],
+    [null, null, "red", "red", "yellow", "red"],
+    [null, null, null, "yellow", "red", "yellow"],
+    [null, null, null, null, "red", "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  expect(calculateWinner(gameState, [2, 1])).toEqual(null);
+});
+
+test("should return winner if there are 4 consecutive squares (descending diagonal)", () => {
+  const gameState = [
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, null],
+    [null, null, "red", "red", "yellow", "yellow"],
+    [null, null, null, "red", "red", "yellow"],
+    [null, null, null, null, "red", "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  expect(calculateWinner(gameState, [3, 2])).toEqual("red");
 });

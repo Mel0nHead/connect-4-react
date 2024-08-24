@@ -35,7 +35,27 @@ function calculateWinner(gameState, move) {
     return cellValue === valueOfLastMove ? count + 1 : 0;
   }, 0);
 
-  return x === winningNumber ||
+  const min = Math.min(columnIndex, rowIndex);
+
+  let cI = columnIndex - min;
+  let rI = rowIndex - min;
+  const arr = [];
+
+  while (cI < NUMBER_OF_COLUMNS && rI < NUMBER_OF_ROWS) {
+    arr.push([cI, rI]);
+    cI++;
+    rI++;
+  }
+
+  const y = arr.reduce((count, [colIndex, rowIndex]) => {
+    const cellValue = gameState[colIndex][rowIndex];
+    if (count === winningNumber) return count;
+
+    return cellValue === valueOfLastMove ? count + 1 : 0;
+  }, 0);
+
+  return y === winningNumber ||
+    x === winningNumber ||
     consecutiveSquaresInColumn === winningNumber ||
     consecutiveSquaresInRow === winningNumber
     ? valueOfLastMove
