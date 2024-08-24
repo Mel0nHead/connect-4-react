@@ -2,39 +2,13 @@ import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "../constants";
 
 const winningNumber = 4;
 
-function calculateWinner(gameState, move) {
-  const [columnIndex, rowIndex] = move;
-
-  const valueOfLastMove = gameState[columnIndex][rowIndex];
-
-  const consecutiveSquaresInColumn = gameState[columnIndex].reduce(
-    (count, cellValue) => {
-      if (count === winningNumber) return count;
-
-      return cellValue === valueOfLastMove ? count + 1 : 0;
-    },
-    0
-  );
-
-  const consecutiveSquaresInRow = gameState
-    .map((col) => col[rowIndex])
-    .reduce((count, cellValue) => {
-      if (count === winningNumber) return count;
-
-      return cellValue === valueOfLastMove ? count + 1 : 0;
-    }, 0);
-
-  const increasingDialognal = Array.from(Array(NUMBER_OF_COLUMNS).keys())
+function getAscendingDiagonal(columnIndex, rowIndex) {
+  return Array.from(Array(NUMBER_OF_COLUMNS).keys())
     .map((value) => [value, columnIndex + rowIndex - value])
     .filter(([_, rowIndex]) => rowIndex < NUMBER_OF_ROWS);
+}
 
-  const x = increasingDialognal.reduce((count, [colIndex, rowIndex]) => {
-    const cellValue = gameState[colIndex][rowIndex];
-    if (count === winningNumber) return count;
-
-    return cellValue === valueOfLastMove ? count + 1 : 0;
-  }, 0);
-
+function getDescendingDiagonal(columnIndex, rowIndex) {
   const min = Math.min(columnIndex, rowIndex);
 
   let cI = columnIndex - min;
@@ -47,19 +21,80 @@ function calculateWinner(gameState, move) {
     rI++;
   }
 
-  const y = arr.reduce((count, [colIndex, rowIndex]) => {
+  return arr;
+}
+
+function hasWinningDiagonal(gameState, move) {
+  const [columnIndex, rowIndex] = move;
+  const valueOfLastMove = gameState[columnIndex][rowIndex];
+
+  const ascendingConsecutiveCount = getAscendingDiagonal(
+    columnIndex,
+    rowIndex
+  ).reduce((count, [colIndex, rowIndex]) => {
     const cellValue = gameState[colIndex][rowIndex];
     if (count === winningNumber) return count;
 
     return cellValue === valueOfLastMove ? count + 1 : 0;
   }, 0);
 
-  return y === winningNumber ||
-    x === winningNumber ||
-    consecutiveSquaresInColumn === winningNumber ||
-    consecutiveSquaresInRow === winningNumber
-    ? valueOfLastMove
-    : null;
+  const descendingConsecutiveCount = getDescendingDiagonal(
+    columnIndex,
+    rowIndex
+  ).reduce((count, [colIndex, rowIndex]) => {
+    const cellValue = gameState[colIndex][rowIndex];
+    if (count === winningNumber) return count;
+
+    return cellValue === valueOfLastMove ? count + 1 : 0;
+  }, 0);
+
+  return (
+    descendingConsecutiveCount === winningNumber ||
+    ascendingConsecutiveCount === winningNumber
+  );
+}
+
+function hasWinningColumn(gameState, move) {
+  const [columnIndex, rowIndex] = move;
+  const valueOfLastMove = gameState[columnIndex][rowIndex];
+
+  const consecutiveSquaresInColumn = gameState[columnIndex].reduce(
+    (count, cellValue) => {
+      if (count === winningNumber) return count;
+
+      return cellValue === valueOfLastMove ? count + 1 : 0;
+    },
+    0
+  );
+
+  return consecutiveSquaresInColumn === winningNumber;
+}
+
+function hasWinningRow(gameState, move) {
+  const [columnIndex, rowIndex] = move;
+  const valueOfLastMove = gameState[columnIndex][rowIndex];
+
+  const consecutiveSquaresInRow = gameState
+    .map((col) => col[rowIndex])
+    .reduce((count, cellValue) => {
+      if (count === winningNumber) return count;
+
+      return cellValue === valueOfLastMove ? count + 1 : 0;
+    }, 0);
+
+  return consecutiveSquaresInRow === winningNumber;
+}
+
+function calculateWinner(gameState, move) {
+  const [columnIndex, rowIndex] = move;
+  const valueOfLastMove = gameState[columnIndex][rowIndex];
+
+  const hasWinner =
+    hasWinningDiagonal(gameState, move) ||
+    hasWinningColumn(gameState, move) ||
+    hasWinningRow(gameState, move);
+
+  return hasWinner ? valueOfLastMove : null;
 }
 
 export default calculateWinner;
