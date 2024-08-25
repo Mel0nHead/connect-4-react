@@ -86,6 +86,7 @@ function hasWinningRow(gameState, move) {
 }
 
 function calculateWinner(gameState, move) {
+  if (!move) return null;
   const [columnIndex, rowIndex] = move;
   const valueOfLastMove = gameState[columnIndex][rowIndex];
 

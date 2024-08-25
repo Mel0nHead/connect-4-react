@@ -2,9 +2,10 @@ import { useState } from "react";
 import "./App.css";
 import initialiseGrid from "./utils/initialiseGrid";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
-import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "./constants";
+import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYERS } from "./constants";
 import updateGameState from "./utils/updateGameState";
 import DisplayMessage from "./components/DisplayMessage";
+import calculateWinner from "./utils/calculateWinner";
 
 const CELL_SIZE = 60;
 
@@ -17,12 +18,15 @@ const grid = initialiseGrid(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS);
 function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
   const [gameState, setGameState] = useState(initialGameState);
+  const [mostRecentMove, setMostRecentMove] = useState(null);
+
+  const winner = calculateWinner(gameState, mostRecentMove);
 
   function handleCellClick(columnIndex) {
-    const cellValue = isRedsTurn ? "red" : "yellow";
+    const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
     const rowIndex = findFirstAvailableCellInColumn(gameState, columnIndex);
 
-    if (rowIndex === null) return;
+    if (rowIndex === null || winner) return;
 
     setGameState((currentGameState) => {
       return updateGameState(
@@ -33,12 +37,13 @@ function App() {
       );
     });
     setIsRedsTurn((isRed) => !isRed);
+    setMostRecentMove([columnIndex, rowIndex]);
   }
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
-        <DisplayMessage isRedsTurn={isRedsTurn} />
+        <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
         <div data-testid="grid">
           {grid.map(([row, id], rowIndex) => {
             return (
