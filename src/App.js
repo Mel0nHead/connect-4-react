@@ -4,6 +4,7 @@ import initialiseGrid from "./utils/initialiseGrid";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "./constants";
 import updateGameState from "./utils/updateGameState";
+import DisplayMessage from "./components/DisplayMessage";
 
 const CELL_SIZE = 60;
 
@@ -24,10 +25,6 @@ function App() {
     if (rowIndex === null) return;
 
     setGameState((currentGameState) => {
-      console.log(
-        updateGameState(currentGameState, columnIndex, rowIndex, cellValue)
-      );
-
       return updateGameState(
         currentGameState,
         columnIndex,
@@ -41,7 +38,7 @@ function App() {
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
-        <p>Current turn: {isRedsTurn ? "red" : "yellow"}</p>
+        <DisplayMessage isRedsTurn={isRedsTurn} />
         <div data-testid="grid">
           {grid.map(([row, id], rowIndex) => {
             return (
