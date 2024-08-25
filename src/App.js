@@ -40,10 +40,28 @@ function App() {
     setMostRecentMove([columnIndex, rowIndex]);
   }
 
+  function handlePlayAgainButtonClick() {
+    setIsRedsTurn(true);
+    setGameState(initialGameState);
+    setMostRecentMove(null);
+  }
+
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
-        <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
+        <div
+          style={{ display: "flex", alignItems: "center", marginBottom: 16 }}
+        >
+          <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
+          {winner ? (
+            <button
+              style={{ marginLeft: 16 }}
+              onClick={handlePlayAgainButtonClick}
+            >
+              Play again
+            </button>
+          ) : null}
+        </div>
         <div data-testid="grid">
           {grid.map(([row, id], rowIndex) => {
             return (
