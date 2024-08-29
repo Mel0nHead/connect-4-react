@@ -6,8 +6,7 @@ import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYERS } from "./constants";
 import updateGameState from "./utils/updateGameState";
 import DisplayMessage from "./components/DisplayMessage";
 import calculateWinner from "./utils/calculateWinner";
-
-const CELL_SIZE = 60;
+import GridCell from "./components/GridCell";
 
 const initialGameState = [
   ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
@@ -67,28 +66,15 @@ function App() {
             return (
               <div style={{ display: "flex" }} key={id}>
                 {row.map((cellIndex, columnIndex) => {
-                  const cellValue = gameState[columnIndex][rowIndex];
-
                   return (
-                    <div
+                    <GridCell
                       key={cellIndex}
-                      role="button"
                       onClick={() => handleCellClick(columnIndex, rowIndex)}
-                      style={{
-                        border: "1px solid",
-                        height: CELL_SIZE,
-                        width: CELL_SIZE,
-                        background: cellValue || "none",
-                      }}
-                      data-testid={`grid-cell-${cellIndex}`}
-                    >
-                      <span>
-                        {columnIndex}, {rowIndex}
-                      </span>
-                      {cellValue ? (
-                        <span style={{ display: "none" }}>{cellValue}</span>
-                      ) : null}
-                    </div>
+                      cellIndex={cellIndex}
+                      value={gameState[columnIndex][rowIndex]}
+                      rowIndex={rowIndex}
+                      columnIndex={columnIndex}
+                    />
                   );
                 })}
               </div>

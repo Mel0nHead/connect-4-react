@@ -1,0 +1,24 @@
+const CELL_SIZE = 60;
+
+function GridCell({ onClick, cellIndex, value, columnIndex, rowIndex }) {
+  return (
+    <div
+      role="button"
+      onClick={onClick}
+      style={{
+        border: "1px solid",
+        height: CELL_SIZE,
+        width: CELL_SIZE,
+        background: value || "none",
+      }}
+      data-testid={`grid-cell-${cellIndex}`}
+    >
+      <span>
+        {columnIndex}, {rowIndex}
+      </span>
+      {value ? <span style={{ display: "none" }}>{value}</span> : null}
+    </div>
+  );
+}
+
+export default GridCell;
