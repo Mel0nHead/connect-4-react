@@ -28,74 +28,82 @@ function hasWinningDiagonal(gameState, move) {
   const [columnIndex, rowIndex] = move;
   const valueOfLastMove = gameState[columnIndex][rowIndex];
 
-  const ascendingConsecutiveCount = getAscendingDiagonal(
+  const ascendingConsecutiveSquares = getAscendingDiagonal(
     columnIndex,
     rowIndex
-  ).reduce((count, [colIndex, rowIndex]) => {
+  ).reduce((arr, [colIndex, rowIndex]) => {
     const cellValue = gameState[colIndex][rowIndex];
-    if (count === winningNumber) return count;
+    if (arr.length === winningNumber) return arr;
 
-    return cellValue === valueOfLastMove ? count + 1 : 0;
-  }, 0);
+    return cellValue === valueOfLastMove ? [...arr, [colIndex, rowIndex]] : [];
+  }, []);
 
-  const descendingConsecutiveCount = getDescendingDiagonal(
+  const descendingConsecutiveSquares = getDescendingDiagonal(
     columnIndex,
     rowIndex
-  ).reduce((count, [colIndex, rowIndex]) => {
+  ).reduce((arr, [colIndex, rowIndex]) => {
     const cellValue = gameState[colIndex][rowIndex];
-    if (count === winningNumber) return count;
+    if (arr.length === winningNumber) return arr;
 
-    return cellValue === valueOfLastMove ? count + 1 : 0;
-  }, 0);
+    return cellValue === valueOfLastMove ? [...arr, [colIndex, rowIndex]] : [];
+  }, []);
 
   return (
-    descendingConsecutiveCount === winningNumber ||
-    ascendingConsecutiveCount === winningNumber
+    (descendingConsecutiveSquares.length === winningNumber
+      ? descendingConsecutiveSquares
+      : null) ||
+    (ascendingConsecutiveSquares.length === winningNumber
+      ? ascendingConsecutiveSquares
+      : null)
   );
 }
 
-function hasWinningColumn(gameState, move) {
+function getColumnBasedWinner(gameState, move) {
   const [columnIndex, rowIndex] = move;
   const valueOfLastMove = gameState[columnIndex][rowIndex];
 
   const consecutiveSquaresInColumn = gameState[columnIndex].reduce(
-    (count, cellValue) => {
-      if (count === winningNumber) return count;
+    (arr, cellValue, rowIdx) => {
+      if (arr.length === winningNumber) return arr;
 
-      return cellValue === valueOfLastMove ? count + 1 : 0;
+      return cellValue === valueOfLastMove
+        ? [...arr, [columnIndex, rowIdx]]
+        : [];
     },
-    0
+    []
   );
 
-  return consecutiveSquaresInColumn === winningNumber;
+  return consecutiveSquaresInColumn.length === winningNumber
+    ? consecutiveSquaresInColumn
+    : null;
 }
 
-function hasWinningRow(gameState, move) {
+function getRowBasedWinner(gameState, move) {
   const [columnIndex, rowIndex] = move;
   const valueOfLastMove = gameState[columnIndex][rowIndex];
 
   const consecutiveSquaresInRow = gameState
     .map((col) => col[rowIndex])
-    .reduce((count, cellValue) => {
-      if (count === winningNumber) return count;
+    .reduce((arr, cellValue, colIdx) => {
+      if (arr.length === winningNumber) return arr;
 
-      return cellValue === valueOfLastMove ? count + 1 : 0;
-    }, 0);
+      return cellValue === valueOfLastMove ? [...arr, [colIdx, rowIndex]] : [];
+    }, []);
 
-  return consecutiveSquaresInRow === winningNumber;
+  return consecutiveSquaresInRow.length === winningNumber
+    ? consecutiveSquaresInRow
+    : null;
 }
 
 function calculateWinner(gameState, move) {
   if (!move) return null;
-  const [columnIndex, rowIndex] = move;
-  const valueOfLastMove = gameState[columnIndex][rowIndex];
 
-  const hasWinner =
+  const winningSquares =
     hasWinningDiagonal(gameState, move) ||
-    hasWinningColumn(gameState, move) ||
-    hasWinningRow(gameState, move);
+    getColumnBasedWinner(gameState, move) ||
+    getRowBasedWinner(gameState, move);
 
-  return hasWinner ? valueOfLastMove : null;
+  return winningSquares || null;
 }
 
 export default calculateWinner;

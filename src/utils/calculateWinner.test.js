@@ -25,7 +25,12 @@ test("should return winner if there are 4 consecutive cells with same value in a
     [null, null, null, null, null, null],
   ];
 
-  expect(calculateWinner(gameState, [2, 2])).toEqual("yellow");
+  expect(calculateWinner(gameState, [2, 2])).toEqual([
+    [2, 2],
+    [2, 3],
+    [2, 4],
+    [2, 5],
+  ]);
 });
 
 test("should not return winner if there are not 4 consecutive squares (row)", () => {
@@ -53,7 +58,12 @@ test("should return winner if there are 4 consecutive squares (row)", () => {
     [null, null, null, null, null, null],
   ];
 
-  expect(calculateWinner(gameState, [4, 5])).toEqual("red");
+  expect(calculateWinner(gameState, [4, 5])).toEqual([
+    [1, 5],
+    [2, 5],
+    [3, 5],
+    [4, 5],
+  ]);
 });
 
 test("should not return winner if there are not 4 consecutive squares (ascending diagonal)", () => {
@@ -81,7 +91,12 @@ test("should return winner if there are 4 consecutive squares (ascending diagona
     [null, null, null, null, null, null],
   ];
 
-  expect(calculateWinner(gameState, [4, 2])).toEqual("red");
+  expect(calculateWinner(gameState, [4, 2])).toEqual([
+    [1, 5],
+    [2, 4],
+    [3, 3],
+    [4, 2],
+  ]);
 });
 
 test("should not return winner if there are not 4 consecutive squares (descending diagonal)", () => {
@@ -109,5 +124,10 @@ test("should return winner if there are 4 consecutive squares (descending diagon
     [null, null, null, null, null, "red"],
   ];
 
-  expect(calculateWinner(gameState, [3, 2])).toEqual("red");
+  expect(calculateWinner(gameState, [3, 2])).toEqual([
+    [3, 2],
+    [4, 3],
+    [5, 4],
+    [6, 5],
+  ]);
 });
