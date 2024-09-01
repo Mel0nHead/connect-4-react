@@ -20,10 +20,6 @@ function GridCell({
       }}
       data-testid={`grid-cell-${cellIndex}`}
     >
-      <span>
-        {columnIndex}, {rowIndex}
-      </span>
-      <b>{cellIndex}</b>
       {isWinningCell ? <span>W</span> : null}
       {value ? <span style={{ display: "none" }}>{value}</span> : null}
     </div>

@@ -12,7 +12,13 @@ test("should show winning squares if there is a winner", async () => {
     [null, null, null, null, null, null],
   ];
 
-  render(<Grid onCellClick={jest.fn()} gameState={gameState} />);
+  render(
+    <Grid
+      onCellClick={jest.fn()}
+      gameState={gameState}
+      mostRecentMove={[2, 2]}
+    />
+  );
 
   const winningCell1 = await screen.findByTestId("grid-cell-16");
   const winningCell2 = await screen.findByTestId("grid-cell-23");
@@ -24,5 +30,7 @@ test("should show winning squares if there is a winner", async () => {
   expect(winningCell3).toHaveTextContent("W");
   expect(winningCell4).toHaveTextContent("W");
 
-  // need to verify these are the only cells with 'W' in them
+  const winningCells = screen.getAllByText("W");
+
+  expect(winningCells).toHaveLength(4);
 });
