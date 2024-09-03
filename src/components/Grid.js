@@ -32,10 +32,13 @@ function Grid({ gameState, onCellClick, mostRecentMove, isRedsTurn }) {
 
   return (
     <>
-      <div style={{ height: CELL_SIZE, display: "flex" }}>
+      <div style={{ display: "flex" }}>
         {topRow.map((val) => (
-          <div key={val} style={{ width: CELL_SIZE + 2 }}>
-            {currentHoveredRow === val ? (
+          <div
+            key={val}
+            style={{ width: CELL_SIZE + 2, height: CELL_SIZE + 2, padding: 5 }}
+          >
+            {currentHoveredRow === val && !winningSquares ? (
               <GameToken value={isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow} />
             ) : null}
           </div>

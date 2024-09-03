@@ -19,10 +19,12 @@ function GridCell({
         border: "1px solid",
         height: CELL_SIZE,
         width: CELL_SIZE,
+        padding: 5,
+        background: isWinningCell ? "#3bfa3b" : "none",
       }}
       data-testid={`grid-cell-${cellIndex}`}
     >
-      {isWinningCell ? <span>W</span> : null}
+      {isWinningCell ? <span style={{ display: "none" }}>W</span> : null}
       {value ? <GameToken value={value} /> : null}
     </div>
   );
