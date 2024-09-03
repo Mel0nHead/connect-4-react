@@ -8,6 +8,14 @@ const grid = initialiseGrid(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS);
 function Grid({ gameState, onCellClick, mostRecentMove }) {
   const winningSquares = calculateWinner(gameState, mostRecentMove);
 
+  function isWinningCell(columnIndex, rowIndex) {
+    return winningSquares
+      ? winningSquares.some(
+          ([colIdx, rowIdx]) => colIdx === columnIndex && rowIdx === rowIndex
+        )
+      : false;
+  }
+
   return (
     <div data-testid="grid">
       {grid.map(([row, id], rowIndex) => {
@@ -20,16 +28,7 @@ function Grid({ gameState, onCellClick, mostRecentMove }) {
                   onClick={() => onCellClick(columnIndex, rowIndex)}
                   cellIndex={cellIndex}
                   value={gameState[columnIndex][rowIndex]}
-                  rowIndex={rowIndex}
-                  columnIndex={columnIndex}
-                  isWinningCell={
-                    winningSquares
-                      ? winningSquares.some(
-                          ([colIdx, rowIdx]) =>
-                            colIdx === columnIndex && rowIdx === rowIndex
-                        )
-                      : false
-                  }
+                  isWinningCell={isWinningCell(columnIndex, rowIndex)}
                 />
               );
             })}

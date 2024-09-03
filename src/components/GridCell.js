@@ -1,13 +1,23 @@
+import { PLAYERS } from "../constants";
+
 const CELL_SIZE = 60;
 
-function GridCell({
-  onClick,
-  cellIndex,
-  value,
-  columnIndex,
-  rowIndex,
-  isWinningCell,
-}) {
+function GameToken({ colour }) {
+  return (
+    <div
+      style={{
+        background: colour === PLAYERS.Red ? "#cc0000" : "#f6c901",
+        height: CELL_SIZE,
+        width: CELL_SIZE,
+        borderRadius: "50%",
+      }}
+    >
+      <span style={{ display: "none" }}>{colour}</span>
+    </div>
+  );
+}
+
+function GridCell({ onClick, cellIndex, value, isWinningCell }) {
   return (
     <div
       role="button"
@@ -16,12 +26,11 @@ function GridCell({
         border: "1px solid",
         height: CELL_SIZE,
         width: CELL_SIZE,
-        background: value || "none",
       }}
       data-testid={`grid-cell-${cellIndex}`}
     >
       {isWinningCell ? <span>W</span> : null}
-      {value ? <span style={{ display: "none" }}>{value}</span> : null}
+      {value ? <GameToken colour={value} /> : null}
     </div>
   );
 }
