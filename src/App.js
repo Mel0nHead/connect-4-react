@@ -71,6 +71,7 @@ function App() {
           gameState={gameState}
           onCellClick={handleCellClick}
           mostRecentMove={mostRecentMove}
+          isRedsTurn={isRedsTurn}
         />
       </div>
     </div>
