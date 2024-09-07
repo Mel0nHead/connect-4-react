@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYERS } from "./constants";
@@ -6,17 +6,29 @@ import updateGameState from "./utils/updateGameState";
 import DisplayMessage from "./components/DisplayMessage";
 import calculateWinner from "./utils/calculateWinner";
 import Grid from "./components/Grid";
+import WinsCounter from "./components/WinsCounter";
 
 const initialGameState = [
   ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
 ];
 
+function getWinner(winningSquares, gameState, mostRecentMove) {
+  return winningSquares
+    ? gameState[mostRecentMove[0]][mostRecentMove[1]]
+    : null;
+}
+
 function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
   const [gameState, setGameState] = useState(initialGameState);
   const [mostRecentMove, setMostRecentMove] = useState(null);
+  const [winsCount, setWinsCount] = useState({
+    [PLAYERS.Red]: 0,
+    [PLAYERS.Yellow]: 0,
+  });
 
   const winningSquares = calculateWinner(gameState, mostRecentMove);
+  const winner = getWinner(winningSquares, gameState, mostRecentMove);
 
   function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
@@ -42,22 +54,28 @@ function App() {
     setMostRecentMove(null);
   }
 
-  function getWinner(winningSquares, gameState, mostRecentMove) {
-    return winningSquares
-      ? gameState[mostRecentMove[0]][mostRecentMove[1]]
-      : null;
-  }
+  useEffect(() => {
+    if (winner) {
+      setWinsCount((current) => {
+        return { ...current, [winner]: current[winner] + 1 };
+      });
+    }
+  }, [winner]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
+        <h1>Connect 4</h1>
+        <WinsCounter winsCount={winsCount} />
         <div
-          style={{ display: "flex", alignItems: "center", marginBottom: 16 }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: 16,
+            marginTop: 16,
+          }}
         >
-          <DisplayMessage
-            isRedsTurn={isRedsTurn}
-            winner={getWinner(winningSquares, gameState, mostRecentMove)}
-          />
+          <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
           {winningSquares ? (
             <button
               style={{ marginLeft: 16 }}

@@ -3,11 +3,12 @@ import GameToken from "./GameToken";
 
 function GridCell({
   onClick,
-  cellIndex,
   value,
   isWinningCell,
   onMouseEnter,
   onMouseLeave,
+  rowIndex,
+  columnIndex,
 }) {
   return (
     <div
@@ -22,7 +23,7 @@ function GridCell({
         padding: 5,
         background: isWinningCell ? "#3bfa3b" : "none",
       }}
-      data-testid={`grid-cell-${cellIndex}`}
+      data-testid={`grid-cell-${columnIndex}-${rowIndex}`}
     >
       {isWinningCell ? <span style={{ display: "none" }}>W</span> : null}
       {value ? <GameToken value={value} /> : null}

@@ -53,13 +53,14 @@ function Grid({ gameState, onCellClick, mostRecentMove, isRedsTurn }) {
                   <GridCell
                     key={cellIndex}
                     onClick={() => onCellClick(columnIndex, rowIndex)}
-                    cellIndex={cellIndex}
                     value={gameState[columnIndex][rowIndex]}
                     isWinningCell={isWinningCell(columnIndex, rowIndex)}
                     onMouseEnter={() => {
                       setCurrentHoveredRow(columnIndex);
                     }}
                     onMouseLeave={handleMouseLeave}
+                    columnIndex={columnIndex}
+                    rowIndex={rowIndex}
                   />
                 );
               })}
