@@ -51,6 +51,7 @@ function App() {
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
+        <h1>Connect 4</h1>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 16 }}
         >
@@ -66,6 +67,9 @@ function App() {
               Play again
             </button>
           ) : null}
+          <div data-testid="win-tallies">
+            <h2>Wins</h2>
+          </div>
         </div>
         <Grid
           gameState={gameState}

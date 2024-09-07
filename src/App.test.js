@@ -52,3 +52,11 @@ test("should only be able to populate the first available slot in column (starti
   expect(await screen.findByTestId(testId2)).toHaveTextContent("red");
   expect(await screen.findByTestId(testId1)).not.toHaveTextContent("red");
 });
+
+test("should initially show win tallies as 0", () => {
+  render(<App />);
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Wins");
+});
