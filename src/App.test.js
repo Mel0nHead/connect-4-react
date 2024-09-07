@@ -62,3 +62,26 @@ test("should initially show win tallies as 0", () => {
   expect(winTalliesContainer).toHaveTextContent("Red: 0");
   expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
 });
+
+test("should update win count after someone wins", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+
+  expect(screen.getByTestId("display-message")).toHaveTextContent("Red wins!");
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
+  expect(winTalliesContainer).toHaveTextContent("Red: 1");
+});

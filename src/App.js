@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYERS } from "./constants";
@@ -15,8 +15,10 @@ function App() {
   const [isRedsTurn, setIsRedsTurn] = useState(true);
   const [gameState, setGameState] = useState(initialGameState);
   const [mostRecentMove, setMostRecentMove] = useState(null);
+  const [winsCount, setWinsCount] = useState({ red: 0, yellow: 0 });
 
   const winningSquares = calculateWinner(gameState, mostRecentMove);
+  const winner = getWinner(winningSquares, gameState, mostRecentMove);
 
   function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
@@ -48,6 +50,14 @@ function App() {
       : null;
   }
 
+  useEffect(() => {
+    if (winner) {
+      setWinsCount((current) => {
+        return { ...current, [winner]: current[winner] + 1 };
+      });
+    }
+  }, [winner]);
+
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
@@ -55,10 +65,7 @@ function App() {
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 16 }}
         >
-          <DisplayMessage
-            isRedsTurn={isRedsTurn}
-            winner={getWinner(winningSquares, gameState, mostRecentMove)}
-          />
+          <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
           {winningSquares ? (
             <button
               style={{ marginLeft: 16 }}
@@ -69,8 +76,8 @@ function App() {
           ) : null}
           <div data-testid="win-tallies">
             <h2>Wins</h2>
-            <span>Red: 0</span>
-            <span>Yellow: 0</span>
+            <span>Red: {winsCount.red}</span>
+            <span>Yellow: {winsCount.yellow}</span>
           </div>
         </div>
         <Grid
