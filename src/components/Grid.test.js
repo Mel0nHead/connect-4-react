@@ -20,10 +20,10 @@ test("should show winning squares if there is a winner", async () => {
     />
   );
 
-  const winningCell1 = await screen.findByTestId("grid-cell-16");
-  const winningCell2 = await screen.findByTestId("grid-cell-23");
-  const winningCell3 = await screen.findByTestId("grid-cell-30");
-  const winningCell4 = await screen.findByTestId("grid-cell-37");
+  const winningCell1 = await screen.findByTestId("grid-cell-2-2");
+  const winningCell2 = await screen.findByTestId("grid-cell-2-3");
+  const winningCell3 = await screen.findByTestId("grid-cell-2-4");
+  const winningCell4 = await screen.findByTestId("grid-cell-2-5");
 
   expect(winningCell1).toHaveTextContent("W");
   expect(winningCell2).toHaveTextContent("W");

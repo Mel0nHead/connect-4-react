@@ -5,7 +5,6 @@ test("should not show a value if value is null", async () => {
   render(
     <GridCell
       onClick={jest.fn()}
-      cellIndex={0}
       columnIndex={0}
       rowIndex={0}
       value={null}
@@ -13,7 +12,7 @@ test("should not show a value if value is null", async () => {
     />
   );
 
-  const cell = await screen.findByTestId("grid-cell-0");
+  const cell = await screen.findByTestId("grid-cell-0-0");
 
   expect(cell).not.toHaveTextContent("red");
   expect(cell).not.toHaveTextContent("yellow");
@@ -24,7 +23,6 @@ test("should be yellow if value is yellow", async () => {
   render(
     <GridCell
       onClick={jest.fn()}
-      cellIndex={0}
       columnIndex={0}
       rowIndex={0}
       value="yellow"
@@ -32,7 +30,7 @@ test("should be yellow if value is yellow", async () => {
     />
   );
 
-  const cell = await screen.findByTestId("grid-cell-0");
+  const cell = await screen.findByTestId("grid-cell-0-0");
 
   expect(cell).toHaveTextContent("yellow");
 });
@@ -41,7 +39,6 @@ test("should be red if value is red", async () => {
   render(
     <GridCell
       onClick={jest.fn()}
-      cellIndex={0}
       columnIndex={0}
       rowIndex={0}
       value="red"
@@ -49,7 +46,7 @@ test("should be red if value is red", async () => {
     />
   );
 
-  const cell = await screen.findByTestId("grid-cell-0");
+  const cell = await screen.findByTestId("grid-cell-0-0");
 
   expect(cell).toHaveTextContent("red");
 });
@@ -58,7 +55,6 @@ test("should display 'W' if it is a winning cell", async () => {
   render(
     <GridCell
       onClick={jest.fn()}
-      cellIndex={0}
       columnIndex={0}
       rowIndex={0}
       value="red"
@@ -66,7 +62,7 @@ test("should display 'W' if it is a winning cell", async () => {
     />
   );
 
-  const cell = await screen.findByTestId("grid-cell-0");
+  const cell = await screen.findByTestId("grid-cell-0-0");
 
   expect(cell).toHaveTextContent("W");
 });
