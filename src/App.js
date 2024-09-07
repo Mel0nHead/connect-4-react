@@ -69,6 +69,8 @@ function App() {
           ) : null}
           <div data-testid="win-tallies">
             <h2>Wins</h2>
+            <span>Red: 0</span>
+            <span>Yellow: 0</span>
           </div>
         </div>
         <Grid

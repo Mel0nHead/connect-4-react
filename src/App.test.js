@@ -59,4 +59,6 @@ test("should initially show win tallies as 0", () => {
   const winTalliesContainer = screen.getByTestId("win-tallies");
 
   expect(winTalliesContainer).toHaveTextContent("Wins");
+  expect(winTalliesContainer).toHaveTextContent("Red: 0");
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
 });
