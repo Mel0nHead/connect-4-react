@@ -5,3 +5,5 @@ export const PLAYERS = {
   Red: "red",
   Yellow: "yellow",
 };
+
+export const CELL_SIZE = 60;

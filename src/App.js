@@ -42,6 +42,12 @@ function App() {
     setMostRecentMove(null);
   }
 
+  function getWinner(winningSquares, gameState, mostRecentMove) {
+    return winningSquares
+      ? gameState[mostRecentMove[0]][mostRecentMove[1]]
+      : null;
+  }
+
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
@@ -50,11 +56,7 @@ function App() {
         >
           <DisplayMessage
             isRedsTurn={isRedsTurn}
-            winner={
-              winningSquares
-                ? gameState[mostRecentMove[0]][mostRecentMove[1]]
-                : null
-            }
+            winner={getWinner(winningSquares, gameState, mostRecentMove)}
           />
           {winningSquares ? (
             <button
@@ -69,6 +71,7 @@ function App() {
           gameState={gameState}
           onCellClick={handleCellClick}
           mostRecentMove={mostRecentMove}
+          isRedsTurn={isRedsTurn}
         />
       </div>
     </div>
