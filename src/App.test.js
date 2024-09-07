@@ -85,3 +85,22 @@ test("should update win count after someone wins", async () => {
   expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
   expect(winTalliesContainer).toHaveTextContent("Red: 1");
 });
+
+test("should declare game as a draw", () => {
+  const user = userEvent.setup();
+  render(<App />);
+  // ["red", "red", "yellow", "yellow", "red", "red"],
+  // ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+  // ["red", "red", "yellow", "yellow", "red", "red"],
+  // ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+  // ["red", "red", "yellow", "yellow", "red", "red"],
+  // ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+  // ["yellow", "red", "yellow", "yellow", "red", "red"],
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+  const thirdColumn = screen.getByTestId("grid-cell-2-0");
+  const fourthColumn = screen.getByTestId("grid-cell-3-0");
+  const fifthColumn = screen.getByTestId("grid-cell-4-0");
+  const sixthColumn = screen.getByTestId("grid-cell-5-0");
+  const seventhColumn = screen.getByTestId("grid-cell-6-0");
+});
