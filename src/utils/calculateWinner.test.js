@@ -131,3 +131,17 @@ test("should return winner if there are 4 consecutive squares (descending diagon
     [6, 5],
   ]);
 });
+
+test("should return null if game is a draw", () => {
+  const gameState = [
+    ["red", "red", "yellow", "yellow", "red", "red"],
+    ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+    ["red", "red", "yellow", "yellow", "red", "red"],
+    ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+    ["red", "red", "yellow", "yellow", "red", "red"],
+    ["yellow", "yellow", "red", "red", "yellow", "yellow"],
+    ["yellow", "red", "yellow", "red", "yellow", "red"],
+  ];
+
+  expect(calculateWinner(gameState, [1, 0])).toEqual(null);
+});

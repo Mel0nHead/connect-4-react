@@ -1,19 +1,17 @@
 import { PLAYERS } from "../constants";
 
-function DisplayMessage({ isRedsTurn, winner }) {
-  if (winner) {
-    return (
-      <p data-testid="display-message">
-        {winner === PLAYERS.Yellow ? "Yellow" : "Red"} wins!
-      </p>
-    );
+function DisplayMessage({ isRedsTurn, winner, isGridFull }) {
+  function getMessage() {
+    if (winner) {
+      return `${winner === PLAYERS.Yellow ? "Yellow" : "Red"} wins!`;
+    } else if (isGridFull) {
+      return "It's a draw!";
+    } else {
+      return `Current turn: ${isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow}`;
+    }
   }
 
-  return (
-    <p data-testid="display-message">
-      Current turn: {isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow}
-    </p>
-  );
+  return <p data-testid="display-message">{getMessage()}</p>;
 }
 
 export default DisplayMessage;

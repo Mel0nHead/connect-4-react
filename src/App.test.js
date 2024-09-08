@@ -85,3 +85,69 @@ test("should update win count after someone wins", async () => {
   expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
   expect(winTalliesContainer).toHaveTextContent("Red: 1");
 });
+
+test("should declare game as a draw", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
+  expect(winTalliesContainer).toHaveTextContent("Red: 0");
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+  const thirdColumn = screen.getByTestId("grid-cell-2-0");
+  const fourthColumn = screen.getByTestId("grid-cell-3-0");
+  const fifthColumn = screen.getByTestId("grid-cell-4-0");
+  const sixthColumn = screen.getByTestId("grid-cell-5-0");
+  const seventhColumn = screen.getByTestId("grid-cell-6-0");
+
+  await user.click(secondColumn);
+  await user.click(thirdColumn);
+  await user.click(secondColumn);
+  await user.click(thirdColumn);
+  await user.click(thirdColumn);
+  await user.click(secondColumn);
+  await user.click(thirdColumn);
+  await user.click(secondColumn);
+  await user.click(secondColumn);
+  await user.click(thirdColumn);
+  await user.click(secondColumn);
+  await user.click(thirdColumn);
+  await user.click(fourthColumn);
+  await user.click(fifthColumn);
+  await user.click(fourthColumn);
+  await user.click(fifthColumn);
+  await user.click(fifthColumn);
+  await user.click(fourthColumn);
+  await user.click(fifthColumn);
+  await user.click(fourthColumn);
+  await user.click(fourthColumn);
+  await user.click(fifthColumn);
+  await user.click(fourthColumn);
+  await user.click(fifthColumn);
+  await user.click(sixthColumn);
+  await user.click(seventhColumn);
+  await user.click(sixthColumn);
+  await user.click(seventhColumn);
+  await user.click(seventhColumn);
+  await user.click(sixthColumn);
+  await user.click(seventhColumn);
+  await user.click(sixthColumn);
+  await user.click(sixthColumn);
+  await user.click(seventhColumn);
+  await user.click(sixthColumn);
+  await user.click(seventhColumn);
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+
+  expect(screen.getByTestId("display-message")).toHaveTextContent(
+    "It's a draw!"
+  );
+  expect(screen.getByText("Play again")).toBeVisible();
+});

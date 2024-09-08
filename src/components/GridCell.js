@@ -25,6 +25,7 @@ function GridCell({
       }}
       data-testid={`grid-cell-${columnIndex}-${rowIndex}`}
     >
+      {columnIndex}, {rowIndex}
       {isWinningCell ? <span style={{ display: "none" }}>W</span> : null}
       {value ? <GameToken value={value} /> : null}
     </div>
