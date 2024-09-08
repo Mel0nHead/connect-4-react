@@ -29,6 +29,7 @@ function App() {
 
   const winningSquares = calculateWinner(gameState, mostRecentMove);
   const winner = getWinner(winningSquares, gameState, mostRecentMove);
+  const isGridFull = !gameState.flat().some((v) => v === null);
 
   function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
@@ -75,8 +76,12 @@ function App() {
             marginTop: 16,
           }}
         >
-          <DisplayMessage isRedsTurn={isRedsTurn} winner={winner} />
-          {winningSquares ? (
+          <DisplayMessage
+            isRedsTurn={isRedsTurn}
+            winner={winner}
+            isGridFull={isGridFull}
+          />
+          {winningSquares || isGridFull ? (
             <button
               style={{ marginLeft: 16 }}
               onClick={handlePlayAgainButtonClick}

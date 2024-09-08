@@ -140,7 +140,7 @@ test("should return null if game is a draw", () => {
     ["yellow", "yellow", "red", "red", "yellow", "yellow"],
     ["red", "red", "yellow", "yellow", "red", "red"],
     ["yellow", "yellow", "red", "red", "yellow", "yellow"],
-    ["yellow", "red", "yellow", "yellow", "red", "red"],
+    ["yellow", "red", "yellow", "red", "yellow", "red"],
   ];
 
   expect(calculateWinner(gameState, [1, 0])).toEqual(null);
