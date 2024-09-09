@@ -184,3 +184,28 @@ test("should store game state in local storage", async () => {
 
   expect(JSON.parse(storedGameState)).toEqual(expectedGameState);
 });
+
+test("should initialise game with state from local storage", () => {
+  const initialGameState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  localStorage.setItem("gameState", JSON.stringify(initialGameState));
+
+  const user = userEvent.setup();
+  render(<App />);
+
+  expect(screen.getByTestId("grid-cell-0-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-1-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-2-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-3-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-4-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-5-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-6-5")).toHaveTextContent("red");
+});
