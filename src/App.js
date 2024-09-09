@@ -31,7 +31,8 @@ function App() {
   const isGridFull = !gameState.flat().some((v) => v === null);
 
   const isRedsTurn = mostRecentMove
-    ? gameState[mostRecentMove[0]][mostRecentMove[1]] === PLAYERS.Yellow
+    ? // TODO: create util for this
+      gameState[mostRecentMove[0]][mostRecentMove[1]] === PLAYERS.Yellow
     : true;
 
   function handleCellClick(columnIndex) {
@@ -41,12 +42,16 @@ function App() {
     if (rowIndex === null || winningSquares) return;
 
     setGameState((currentGameState) => {
-      return updateGameState(
+      const updatedState = updateGameState(
         currentGameState,
         columnIndex,
         rowIndex,
         cellValue
       );
+
+      localStorage.setItem("gameState", JSON.stringify(updatedState));
+
+      return updatedState;
     });
     setMostRecentMove([columnIndex, rowIndex]);
   }
