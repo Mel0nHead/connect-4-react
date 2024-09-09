@@ -151,3 +151,29 @@ test("should declare game as a draw", async () => {
   );
   expect(screen.getByText("Play again")).toBeVisible();
 });
+
+test.skip("should store game state in local storage", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const fourthColumn = screen.getByTestId("grid-cell-3-0");
+
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+
+  await user.click(fourthColumn);
+  await user.click(fourthColumn);
+
+  const expectedGameState = [
+    [null, null, null, null, "yellow", "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, "yellow", "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ];
+
+  const storedGameState = localStorage.getItem("game-state");
+});

@@ -19,7 +19,6 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
 }
 
 function App() {
-  const [isRedsTurn, setIsRedsTurn] = useState(true);
   const [gameState, setGameState] = useState(initialGameState);
   const [mostRecentMove, setMostRecentMove] = useState(null);
   const [winsCount, setWinsCount] = useState({
@@ -30,6 +29,10 @@ function App() {
   const winningSquares = calculateWinner(gameState, mostRecentMove);
   const winner = getWinner(winningSquares, gameState, mostRecentMove);
   const isGridFull = !gameState.flat().some((v) => v === null);
+
+  const isRedsTurn = mostRecentMove
+    ? gameState[mostRecentMove[0]][mostRecentMove[1]] === PLAYERS.Yellow
+    : true;
 
   function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
@@ -45,12 +48,10 @@ function App() {
         cellValue
       );
     });
-    setIsRedsTurn((isRed) => !isRed);
     setMostRecentMove([columnIndex, rowIndex]);
   }
 
   function handlePlayAgainButtonClick() {
-    setIsRedsTurn(true);
     setGameState(initialGameState);
     setMostRecentMove(null);
   }
