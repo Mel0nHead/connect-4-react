@@ -3,6 +3,10 @@ import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 
+beforeEach(() => {
+  localStorage.clear();
+});
+
 test("should display the correct number of grid cells", async () => {
   render(<App />);
   const gridCells = await screen.findAllByTestId(/grid-cell-/);
@@ -198,7 +202,6 @@ test("should initialise game with state from local storage", () => {
 
   localStorage.setItem("gameState", JSON.stringify(initialGameState));
 
-  const user = userEvent.setup();
   render(<App />);
 
   expect(screen.getByTestId("grid-cell-0-5")).toHaveTextContent("red");

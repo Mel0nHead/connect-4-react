@@ -18,8 +18,25 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
     : null;
 }
 
+function getInitialGameState() {
+  const storedState = localStorage.getItem("gameState");
+
+  const initialGameState = [
+    ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
+  ];
+
+  if (!storedState) return initialGameState;
+
+  try {
+    const parsedResult = JSON.parse(storedState);
+    return parsedResult;
+  } catch (e) {
+    return initialGameState;
+  }
+}
+
 function App() {
-  const [gameState, setGameState] = useState(initialGameState);
+  const [gameState, setGameState] = useState(() => getInitialGameState());
   const [mostRecentMove, setMostRecentMove] = useState(null);
   const [winsCount, setWinsCount] = useState({
     [PLAYERS.Red]: 0,
