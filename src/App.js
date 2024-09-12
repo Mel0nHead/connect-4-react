@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
-import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS, PLAYERS } from "./constants";
-import updateGameState from "./utils/updateGameState";
+import { PLAYERS } from "./constants";
 import DisplayMessage from "./components/DisplayMessage";
 import calculateWinner from "./utils/calculateWinner";
 import Grid from "./components/Grid";
 import WinsCounter from "./components/WinsCounter";
-
-const initialGameState = [
-  ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
-];
+import useGameState from "./hooks/useGameState";
 
 function getWinner(winningSquares, gameState, mostRecentMove) {
   return winningSquares
@@ -18,25 +14,8 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
     : null;
 }
 
-function getInitialGameState() {
-  const storedState = localStorage.getItem("gameState");
-
-  const initialGameState = [
-    ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
-  ];
-
-  if (!storedState) return initialGameState;
-
-  try {
-    const parsedResult = JSON.parse(storedState);
-    return parsedResult;
-  } catch (e) {
-    return initialGameState;
-  }
-}
-
 function App() {
-  const [gameState, setGameState] = useState(() => getInitialGameState());
+  const { gameState, updateGameState, resetGameState } = useGameState();
   const [mostRecentMove, setMostRecentMove] = useState(null);
   const [winsCount, setWinsCount] = useState({
     [PLAYERS.Red]: 0,
@@ -58,23 +37,12 @@ function App() {
 
     if (rowIndex === null || winningSquares) return;
 
-    setGameState((currentGameState) => {
-      const updatedState = updateGameState(
-        currentGameState,
-        columnIndex,
-        rowIndex,
-        cellValue
-      );
-
-      localStorage.setItem("gameState", JSON.stringify(updatedState));
-
-      return updatedState;
-    });
+    updateGameState([columnIndex, rowIndex], cellValue);
     setMostRecentMove([columnIndex, rowIndex]);
   }
 
   function handlePlayAgainButtonClick() {
-    setGameState(initialGameState);
+    resetGameState();
     setMostRecentMove(null);
   }
 

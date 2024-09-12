@@ -212,3 +212,29 @@ test("should initialise game with state from local storage", () => {
   expect(screen.getByTestId("grid-cell-5-5")).toHaveTextContent("yellow");
   expect(screen.getByTestId("grid-cell-6-5")).toHaveTextContent("red");
 });
+
+test("should save state in local storage after every turn", async () => {
+  render(<App />);
+  const user = userEvent.setup();
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+
+  const storedState = JSON.parse(localStorage.getItem("gameState"));
+
+  expect(storedState).toEqual([
+    [null, null, null, null, "red", "red"],
+    [null, null, null, null, "yellow", "yellow"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ]);
+});
