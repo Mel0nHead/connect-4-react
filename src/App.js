@@ -6,43 +6,43 @@ import DisplayMessage from "./components/DisplayMessage";
 import calculateWinner from "./utils/calculateWinner";
 import Grid from "./components/Grid";
 import WinsCounter from "./components/WinsCounter";
-import useGameState from "./hooks/useGameState";
+import useGridState from "./hooks/useGridState";
+import getGridCellValue from "./utils/getGridCellValue";
+
+// TODO: store rest of state in local storage
 
 function getWinner(winningSquares, gameState, mostRecentMove) {
-  return winningSquares
-    ? gameState[mostRecentMove[0]][mostRecentMove[1]]
-    : null;
+  return winningSquares ? getGridCellValue(gameState, mostRecentMove) : null;
 }
 
 function App() {
-  const { gameState, updateGameState, resetGameState } = useGameState();
+  const { gridState, updateGridState, resetGridState } = useGridState();
   const [mostRecentMove, setMostRecentMove] = useState(null);
   const [winsCount, setWinsCount] = useState({
     [PLAYERS.Red]: 0,
     [PLAYERS.Yellow]: 0,
   });
 
-  const winningSquares = calculateWinner(gameState, mostRecentMove);
-  const winner = getWinner(winningSquares, gameState, mostRecentMove);
-  const isGridFull = !gameState.flat().some((v) => v === null);
+  const winningSquares = calculateWinner(gridState, mostRecentMove);
+  const winner = getWinner(winningSquares, gridState, mostRecentMove);
+  const isGridFull = !gridState.flat().some((v) => v === null);
 
   const isRedsTurn = mostRecentMove
-    ? // TODO: create util for this
-      gameState[mostRecentMove[0]][mostRecentMove[1]] === PLAYERS.Yellow
+    ? getGridCellValue(gridState, mostRecentMove) === PLAYERS.Yellow
     : true;
 
   function handleCellClick(columnIndex) {
     const cellValue = isRedsTurn ? PLAYERS.Red : PLAYERS.Yellow;
-    const rowIndex = findFirstAvailableCellInColumn(gameState, columnIndex);
+    const rowIndex = findFirstAvailableCellInColumn(gridState, columnIndex);
 
     if (rowIndex === null || winningSquares) return;
 
-    updateGameState([columnIndex, rowIndex], cellValue);
+    updateGridState([columnIndex, rowIndex], cellValue);
     setMostRecentMove([columnIndex, rowIndex]);
   }
 
   function handlePlayAgainButtonClick() {
-    resetGameState();
+    resetGridState();
     setMostRecentMove(null);
   }
 
@@ -82,7 +82,7 @@ function App() {
           ) : null}
         </div>
         <Grid
-          gameState={gameState}
+          gameState={gridState}
           onCellClick={handleCellClick}
           mostRecentMove={mostRecentMove}
           isRedsTurn={isRedsTurn}

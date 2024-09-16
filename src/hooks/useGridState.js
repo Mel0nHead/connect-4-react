@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "../constants";
 
-// TODO:
-// refactor
-function getInitialGameState() {
-  const storedState = localStorage.getItem("gameState");
+const localStorageKey = "gameState";
 
-  const initialGameState = [
+function getInitialGridState() {
+  const storedState = localStorage.getItem(localStorageKey);
+
+  const initialGridState = [
     ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
   ];
 
-  if (!storedState) return initialGameState;
+  if (!storedState) return initialGridState;
 
   try {
     const parsedResult = JSON.parse(storedState);
     return parsedResult;
   } catch (e) {
-    return initialGameState;
+    return initialGridState;
   }
 }
 
-function updateGameState(currentGameState, columnIndex, rowIndex, newValue) {
+function updateGridState(currentGameState, columnIndex, rowIndex, newValue) {
   const column = currentGameState[columnIndex];
   const colSlice1 = column.slice(0, rowIndex);
   const colSlice2 = column.slice(rowIndex + 1);
@@ -33,35 +33,35 @@ function updateGameState(currentGameState, columnIndex, rowIndex, newValue) {
   return [...stateSlice1, updatedColumn, ...stateSlice2];
 }
 
-function useGameState() {
-  const [gameState, setGameState] = useState(() => getInitialGameState());
+function useGridState() {
+  const [gridState, setGridState] = useState(() => getInitialGridState());
 
   function setState(cellCoordinates, value) {
     const [columnIndex, rowIndex] = cellCoordinates;
 
-    const updatedState = updateGameState(
-      gameState,
+    const updatedState = updateGridState(
+      gridState,
       columnIndex,
       rowIndex,
       value
     );
 
-    localStorage.setItem("gameState", JSON.stringify(updatedState));
+    localStorage.setItem(localStorageKey, JSON.stringify(updatedState));
 
-    setGameState(updatedState);
+    setGridState(updatedState);
   }
 
-  function resetGameState() {
-    const initialGameState = [
+  function resetGridState() {
+    const initialGridState = [
       ...Array(NUMBER_OF_COLUMNS).fill([...Array(NUMBER_OF_ROWS).fill(null)]),
     ];
 
-    localStorage.setItem("gameState", JSON.stringify(initialGameState));
+    localStorage.setItem(localStorageKey, JSON.stringify(initialGridState));
 
-    setGameState(initialGameState);
+    setGridState(initialGridState);
   }
 
-  return { gameState, updateGameState: setState, resetGameState };
+  return { gridState: gridState, updateGridState: setState, resetGridState };
 }
 
-export default useGameState;
+export default useGridState;
