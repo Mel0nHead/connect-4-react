@@ -17,10 +17,12 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
 function App() {
   const { gridState, updateGridState, resetGridState } = useGridState();
   const [mostRecentMove, setMostRecentMove] = useMostRecentMove();
-  const [winsCount, setWinsCount] = useState({
-    [PLAYERS.Red]: 0,
-    [PLAYERS.Yellow]: 0,
-  });
+  const [winsCount, setWinsCount] = useState(
+    JSON.parse(localStorage.getItem("winsCount")) || {
+      [PLAYERS.Red]: 0,
+      [PLAYERS.Yellow]: 0,
+    }
+  );
 
   const winningSquares = calculateWinner(gridState, mostRecentMove);
   const winner = getWinner(winningSquares, gridState, mostRecentMove);

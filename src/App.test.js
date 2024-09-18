@@ -275,3 +275,14 @@ it("should save most recent move in local storage after every turn", async () =>
 
   expect(localStorage.getItem("mostRecentMove")).toEqual("[1,5]");
 });
+
+it("should initialise wins count from local storage", () => {
+  localStorage.setItem("winsCount", JSON.stringify({ red: 1, yellow: 2 }));
+
+  render(<App />);
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 2");
+  expect(winTalliesContainer).toHaveTextContent("Red: 1");
+});
