@@ -8,8 +8,7 @@ import Grid from "./components/Grid";
 import WinsCounter from "./components/WinsCounter";
 import useGridState from "./hooks/useGridState";
 import getGridCellValue from "./utils/getGridCellValue";
-
-// TODO: store rest of state in local storage
+import useMostRecentMove from "./hooks/useMostRecentMove";
 
 function getWinner(winningSquares, gameState, mostRecentMove) {
   return winningSquares ? getGridCellValue(gameState, mostRecentMove) : null;
@@ -17,7 +16,7 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
 
 function App() {
   const { gridState, updateGridState, resetGridState } = useGridState();
-  const [mostRecentMove, setMostRecentMove] = useState(null);
+  const [mostRecentMove, setMostRecentMove] = useMostRecentMove();
   const [winsCount, setWinsCount] = useState({
     [PLAYERS.Red]: 0,
     [PLAYERS.Yellow]: 0,
@@ -37,8 +36,10 @@ function App() {
 
     if (rowIndex === null || winningSquares) return;
 
-    updateGridState([columnIndex, rowIndex], cellValue);
-    setMostRecentMove([columnIndex, rowIndex]);
+    const cellCoordinates = [columnIndex, rowIndex];
+
+    updateGridState(cellCoordinates, cellValue);
+    setMostRecentMove(cellCoordinates);
   }
 
   function handlePlayAgainButtonClick() {

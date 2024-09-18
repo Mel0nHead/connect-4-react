@@ -238,3 +238,40 @@ test("should save state in local storage after every turn", async () => {
     [null, null, null, null, null, null],
   ]);
 });
+
+it("should initialise current turn from local storage", async () => {
+  const initialGameState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ];
+
+  localStorage.setItem("gameState", JSON.stringify(initialGameState));
+  localStorage.setItem("mostRecentMove", JSON.stringify([0, 0]));
+
+  render(<App />);
+
+  expect(screen.getByTestId("display-message")).toHaveTextContent(
+    "Current turn: yellow"
+  );
+});
+
+it("should save most recent move in local storage after every turn", async () => {
+  render(<App />);
+  const user = userEvent.setup();
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+
+  expect(localStorage.getItem("mostRecentMove")).toEqual("[0,5]");
+
+  await user.click(secondColumn);
+
+  expect(localStorage.getItem("mostRecentMove")).toEqual("[1,5]");
+});
