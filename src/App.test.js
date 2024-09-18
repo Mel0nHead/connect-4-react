@@ -286,3 +286,21 @@ it("should initialise wins count from local storage", () => {
   expect(winTalliesContainer).toHaveTextContent("Yellow: 2");
   expect(winTalliesContainer).toHaveTextContent("Red: 1");
 });
+
+it("should save wins count in local storage after every turn", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+
+  expect(localStorage.getItem("winsCount")).toEqual('{"red":1,"yellow":0}');
+});

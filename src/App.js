@@ -9,6 +9,7 @@ import WinsCounter from "./components/WinsCounter";
 import useGridState from "./hooks/useGridState";
 import getGridCellValue from "./utils/getGridCellValue";
 import useMostRecentMove from "./hooks/useMostRecentMove";
+import useWinsCount from "./hooks/useWinsCount";
 
 function getWinner(winningSquares, gameState, mostRecentMove) {
   return winningSquares ? getGridCellValue(gameState, mostRecentMove) : null;
@@ -17,12 +18,7 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
 function App() {
   const { gridState, updateGridState, resetGridState } = useGridState();
   const [mostRecentMove, setMostRecentMove] = useMostRecentMove();
-  const [winsCount, setWinsCount] = useState(
-    JSON.parse(localStorage.getItem("winsCount")) || {
-      [PLAYERS.Red]: 0,
-      [PLAYERS.Yellow]: 0,
-    }
-  );
+  const [winsCount, setWinsCount] = useWinsCount();
 
   const winningSquares = calculateWinner(gridState, mostRecentMove);
   const winner = getWinner(winningSquares, gridState, mostRecentMove);
@@ -51,11 +47,9 @@ function App() {
 
   useEffect(() => {
     if (winner) {
-      setWinsCount((current) => {
-        return { ...current, [winner]: current[winner] + 1 };
-      });
+      setWinsCount(winner);
     }
-  }, [winner]);
+  }, [winner, setWinsCount]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
