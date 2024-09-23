@@ -1,4 +1,5 @@
 import { NUMBER_OF_COLUMNS, NUMBER_OF_ROWS } from "../constants";
+import getGridCellValue from "./getGridCellValue";
 
 const winningNumber = 4;
 
@@ -26,26 +27,28 @@ function getDescendingDiagonal(columnIndex, rowIndex) {
 
 function hasWinningDiagonal(gameState, move) {
   const [columnIndex, rowIndex] = move;
-  const valueOfLastMove = gameState[columnIndex][rowIndex];
+  const valueOfLastMove = getGridCellValue(gameState, move);
 
   const ascendingConsecutiveSquares = getAscendingDiagonal(
     columnIndex,
     rowIndex
-  ).reduce((arr, [colIndex, rowIndex]) => {
-    const cellValue = gameState[colIndex][rowIndex];
+  ).reduce((arr, move) => {
     if (arr.length === winningNumber) return arr;
 
-    return cellValue === valueOfLastMove ? [...arr, [colIndex, rowIndex]] : [];
+    return getGridCellValue(gameState, move) === valueOfLastMove
+      ? [...arr, move]
+      : [];
   }, []);
 
   const descendingConsecutiveSquares = getDescendingDiagonal(
     columnIndex,
     rowIndex
-  ).reduce((arr, [colIndex, rowIndex]) => {
-    const cellValue = gameState[colIndex][rowIndex];
+  ).reduce((arr, move) => {
     if (arr.length === winningNumber) return arr;
 
-    return cellValue === valueOfLastMove ? [...arr, [colIndex, rowIndex]] : [];
+    return getGridCellValue(gameState, move) === valueOfLastMove
+      ? [...arr, move]
+      : [];
   }, []);
 
   return (
@@ -59,8 +62,8 @@ function hasWinningDiagonal(gameState, move) {
 }
 
 function getColumnBasedWinner(gameState, move) {
-  const [columnIndex, rowIndex] = move;
-  const valueOfLastMove = gameState[columnIndex][rowIndex];
+  const columnIndex = move[0];
+  const valueOfLastMove = getGridCellValue(gameState, move);
 
   const consecutiveSquaresInColumn = gameState[columnIndex].reduce(
     (arr, cellValue, rowIdx) => {
@@ -79,8 +82,8 @@ function getColumnBasedWinner(gameState, move) {
 }
 
 function getRowBasedWinner(gameState, move) {
-  const [columnIndex, rowIndex] = move;
-  const valueOfLastMove = gameState[columnIndex][rowIndex];
+  const rowIndex = move[1];
+  const valueOfLastMove = getGridCellValue(gameState, move);
 
   const consecutiveSquaresInRow = gameState
     .map((col) => col[rowIndex])

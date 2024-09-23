@@ -3,6 +3,10 @@ import userEvent from "@testing-library/user-event";
 
 import App from "./App";
 
+beforeEach(() => {
+  localStorage.clear();
+});
+
 test("should display the correct number of grid cells", async () => {
   render(<App />);
   const gridCells = await screen.findAllByTestId(/grid-cell-/);
@@ -150,4 +154,184 @@ test("should declare game as a draw", async () => {
     "It's a draw!"
   );
   expect(screen.getByText("Play again")).toBeVisible();
+});
+
+test("should store game state in local storage", async () => {
+  localStorage.clear();
+  const user = userEvent.setup();
+  render(<App />);
+
+  const storageKey = "gameState";
+
+  expect(localStorage.getItem(storageKey)).toEqual(null);
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const fourthColumn = screen.getByTestId("grid-cell-3-0");
+
+  await user.click(firstColumn);
+  await user.click(firstColumn);
+
+  await user.click(fourthColumn);
+  await user.click(fourthColumn);
+
+  const expectedGameState = [
+    [null, null, null, null, "yellow", "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, "yellow", "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ];
+
+  const storedGameState = localStorage.getItem(storageKey);
+
+  expect(JSON.parse(storedGameState)).toEqual(expectedGameState);
+});
+
+test("should initialise game with state from local storage", () => {
+  const initialGameState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  localStorage.setItem("gameState", JSON.stringify(initialGameState));
+
+  render(<App />);
+
+  expect(screen.getByTestId("grid-cell-0-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-1-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-2-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-3-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-4-5")).toHaveTextContent("red");
+  expect(screen.getByTestId("grid-cell-5-5")).toHaveTextContent("yellow");
+  expect(screen.getByTestId("grid-cell-6-5")).toHaveTextContent("red");
+});
+
+test("should save state in local storage after every turn", async () => {
+  render(<App />);
+  const user = userEvent.setup();
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+
+  const storedState = JSON.parse(localStorage.getItem("gameState"));
+
+  expect(storedState).toEqual([
+    [null, null, null, null, "red", "red"],
+    [null, null, null, null, "yellow", "yellow"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ]);
+});
+
+it("should initialise current turn from local storage", async () => {
+  const initialGameState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+    [null, null, null, null, null, null],
+  ];
+
+  localStorage.setItem("gameState", JSON.stringify(initialGameState));
+  localStorage.setItem("mostRecentMove", JSON.stringify([0, 0]));
+
+  render(<App />);
+
+  expect(screen.getByTestId("display-message")).toHaveTextContent(
+    "Current turn: yellow"
+  );
+});
+
+it("should save most recent move in local storage after every turn", async () => {
+  render(<App />);
+  const user = userEvent.setup();
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+
+  expect(localStorage.getItem("mostRecentMove")).toEqual("[0,5]");
+
+  await user.click(secondColumn);
+
+  expect(localStorage.getItem("mostRecentMove")).toEqual("[1,5]");
+});
+
+it("should initialise wins count from local storage", () => {
+  localStorage.setItem("winsCount", JSON.stringify({ red: 1, yellow: 2 }));
+
+  render(<App />);
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 2");
+  expect(winTalliesContainer).toHaveTextContent("Red: 1");
+});
+
+it("should save wins count in local storage after every turn", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+
+  const firstColumn = screen.getByTestId("grid-cell-0-0");
+  const secondColumn = screen.getByTestId("grid-cell-1-0");
+
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+  await user.click(secondColumn);
+  await user.click(firstColumn);
+
+  expect(localStorage.getItem("winsCount")).toEqual('{"red":1,"yellow":0}');
+});
+
+it("should be able to reset game state", async () => {
+  const initialGridState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  localStorage.setItem("mostRecentMove", JSON.stringify([0, 0]));
+  localStorage.setItem("winsCount", JSON.stringify({ red: 1, yellow: 2 }));
+  localStorage.setItem("gameState", JSON.stringify(initialGridState));
+
+  const user = userEvent.setup();
+  render(<App />);
+
+  await user.click(screen.getByTestId("reset-game"));
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
+  expect(winTalliesContainer).toHaveTextContent("Red: 0");
+
+  expect(screen.getByText(/Current turn: red/)).toBeVisible();
+
+  expect(screen.getByTestId("grid")).not.toHaveTextContent("red");
+  expect(screen.getByTestId("grid")).not.toHaveTextContent("yellow");
 });
