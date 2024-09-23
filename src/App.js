@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import findFirstAvailableCellInColumn from "./utils/findFirstAvailableCellInColumn";
 import { PLAYERS } from "./constants";
@@ -18,7 +18,7 @@ function getWinner(winningSquares, gameState, mostRecentMove) {
 function App() {
   const { gridState, updateGridState, resetGridState } = useGridState();
   const [mostRecentMove, setMostRecentMove] = useMostRecentMove();
-  const [winsCount, setWinsCount] = useWinsCount();
+  const { winsCount, setWinsCount, resetWinsCount } = useWinsCount();
 
   const winningSquares = calculateWinner(gridState, mostRecentMove);
   const winner = getWinner(winningSquares, gridState, mostRecentMove);
@@ -45,6 +45,12 @@ function App() {
     setMostRecentMove(null);
   }
 
+  function handleResetGame() {
+    resetWinsCount();
+    resetGridState();
+    setMostRecentMove(null);
+  }
+
   useEffect(() => {
     if (winner) {
       setWinsCount(winner);
@@ -55,6 +61,9 @@ function App() {
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <div>
         <h1>Connect 4</h1>
+        <button data-testid="reset-game" onClick={handleResetGame}>
+          Reset game
+        </button>
         <WinsCounter winsCount={winsCount} />
         <div
           style={{

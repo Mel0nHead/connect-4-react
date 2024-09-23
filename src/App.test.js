@@ -304,3 +304,34 @@ it("should save wins count in local storage after every turn", async () => {
 
   expect(localStorage.getItem("winsCount")).toEqual('{"red":1,"yellow":0}');
 });
+
+it("should be able to reset game state", async () => {
+  const initialGridState = [
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+    [null, null, null, null, null, "yellow"],
+    [null, null, null, null, null, "red"],
+  ];
+
+  localStorage.setItem("mostRecentMove", JSON.stringify([0, 0]));
+  localStorage.setItem("winsCount", JSON.stringify({ red: 1, yellow: 2 }));
+  localStorage.setItem("gameState", JSON.stringify(initialGridState));
+
+  const user = userEvent.setup();
+  render(<App />);
+
+  await user.click(screen.getByTestId("reset-game"));
+
+  const winTalliesContainer = screen.getByTestId("win-tallies");
+
+  expect(winTalliesContainer).toHaveTextContent("Yellow: 0");
+  expect(winTalliesContainer).toHaveTextContent("Red: 0");
+
+  expect(screen.getByText(/Current turn: red/)).toBeVisible();
+
+  expect(screen.getByTestId("grid")).not.toHaveTextContent("red");
+  expect(screen.getByTestId("grid")).not.toHaveTextContent("yellow");
+});
